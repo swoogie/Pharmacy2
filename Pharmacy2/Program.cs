@@ -1,4 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+using Pharmacy2.Infra;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration["ConnectionStrings:DbConnection"]);
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -23,5 +31,8 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<DataContext>();
+SeedData.SeedDatabase(context);
 
 app.Run();
