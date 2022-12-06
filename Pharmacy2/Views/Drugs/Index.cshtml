@@ -4,13 +4,19 @@
     ViewData["Title"] = "Drugs";
 }
 
-<h1>All</h1>
+@if (Model.FirstOrDefault().Category == null) 
+{
+    <h1>All</h1>
+}
+else {
+    <h1>@Model.FirstOrDefault().Category.Name</h1>
+}
 
 <div class="row">
     @foreach (var item in Model)
     {
         <div class="col-4">
-            <img src="/images/medicine/@item.Image" class="img-fluid" alt="" />
+            <img src="/images/medicine/@item.Image" class="img-fluid" width="300" alt="" />
             <h4>@item.Name</h4>
             <div>
                 @Html.Raw(item.Description)
@@ -19,7 +25,7 @@
                 @item.Price.ToString("C2")
             </p>
             <p>
-                <a class="btn btn-primary" href="#">Add to cart</a>
+                <a class="btn btn-primary" asp-controller="Cart" asp-action="Add" asp-route-id="@item.Id">Add to cart</a>
             </p>
         </div>
     }
