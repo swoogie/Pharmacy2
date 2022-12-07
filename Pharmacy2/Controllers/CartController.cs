@@ -45,7 +45,7 @@ namespace Pharmacy2.Controllers
                 cartItem.Quantity += 1;
             }
 
-            HttpContext.Session.SetJSon("Cart", cart);
+            HttpContext.Session.SetJson("Cart", cart);
 
             TempData["Success"] = "The product has been added!";
 
@@ -82,7 +82,7 @@ namespace Pharmacy2.Controllers
             }
             else
             {
-                HttpContext.Session.SetJSon("Cart", cart);
+                HttpContext.Session.SetJson("Cart", cart);
             }
 
 
@@ -107,7 +107,7 @@ namespace Pharmacy2.Controllers
             }
             else
             {
-                HttpContext.Session.SetJSon("Cart", cart);
+                HttpContext.Session.SetJson("Cart", cart);
             }
 
             

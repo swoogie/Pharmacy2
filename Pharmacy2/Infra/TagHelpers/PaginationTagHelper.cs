@@ -17,9 +17,9 @@ namespace Pharmacy2.Infra.TagHelpers
         public int PageSize { get; set; }
         public int PageCount { get; set; }
         public int PageRange { get; set; }
-        public string PageFirst { get; set; }
-        public string PageLast { get; set; }
-        public string PageTarget { get; set; }
+        public string? PageFirst { get; set; }
+        public string? PageLast { get; set; }
+        public string? PageTarget { get; set; }
 
         private string AddPageContent()
         {

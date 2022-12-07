@@ -55,7 +55,7 @@ namespace Pharmacy2.Infra
                         new Drug
                         {
                             Name = "Vitamin C",
-                            Slug = "vitaminC",
+                            Slug = "vitaminc",
                             Description = "Vitamin C",
                             Price = 5.99M,
                             Category = vitamins,
@@ -64,7 +64,7 @@ namespace Pharmacy2.Infra
                         new Drug
                         {
                             Name = "Vitamin B",
-                            Slug = "vitaminB",
+                            Slug = "vitaminb",
                             Description = "Vitamin B",
                             Price = 7.99M,
                             Category = vitamins,
