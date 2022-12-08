@@ -2,6 +2,7 @@
 using Pharmacy2.Infra;
 using Pharmacy2.Models;
 using Pharmacy2.Models.ViewModels;
+using System.Drawing.Text;
 
 namespace Pharmacy2.Controllers
 {
@@ -122,6 +123,37 @@ namespace Pharmacy2.Controllers
             HttpContext.Session.Remove("Cart");
 
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Checkout()
+        {
+            List<CartItem> cart = HttpContext.Session.GetJson<List<CartItem>>("Cart");
+            string drugNames = "";
+
+            foreach (var cartItem in cart)
+            {
+                drugNames += cartItem.DrugName + " x " + cartItem.Quantity + ", ";
+            }
+
+            if (cart != null)
+            {
+
+                Order order = new()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    drugNames = drugNames,
+                    total = cart.Sum(x => x.Quantity * x.Price)
+                };
+
+                _context.Add(order);
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] = "Order has been placed!";
+                HttpContext.Session.Remove("Cart");
+                return RedirectToAction("Index");
+            }
+
+            return View(cart);
         }
     }
 }
