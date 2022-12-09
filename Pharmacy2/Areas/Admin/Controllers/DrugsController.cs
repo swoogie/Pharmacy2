@@ -9,7 +9,7 @@ using System.Net.Http.Headers;
 namespace Pharmacy2.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class DrugsController : Controller
     {
 
@@ -29,24 +29,11 @@ namespace Pharmacy2.Areas.Admin.Controllers
             ViewBag.PageRange = pageSize;
             ViewBag.TotalPages = (int)Math.Ceiling((decimal)_context.Drugs.Count() / pageSize);
 
-            return View(await _context.Drugs.OrderByDescending(d => d.Id)
-                .Include(d => d.Category)
-                .Skip((p - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync());
-        }
-
-        public async Task<IActionResult> FetchOrders(int p = 1)
-        {
-            int pageSize = 3;
-            ViewBag.PageNumber = p;
-            ViewBag.PageRange = pageSize;
-            ViewBag.TotalPages = (int)Math.Ceiling((decimal)_context.Orders.Count() / pageSize);
-
-            return View(await _context.Orders.OrderByDescending(d => d.Id)
-                .Skip((p - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync());
+            return View(await _context.Drugs.Include(d => d.Category).ToListAsync());
+                //.Include(d => d.Category)
+                //.Skip((p - 1) * pageSize)
+                //.Take(pageSize)
+                //.ToListAsync());
         }
 
         public IActionResult Create()

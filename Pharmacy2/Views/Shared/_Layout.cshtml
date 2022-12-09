@@ -25,23 +25,23 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        
+
                     </ul>
                     <ul class="navbar-nav float-end">
-                        @if (User.Identity?.IsAuthenticated ?? false)
+                        @if (User.IsInRole("Admin")) // User.Identity?.IsAuthenticated ?? false
                         {
                             <li class="nav-item m-1 pt-1">
-                                <a>Hello, @User.Identity.Name</a>
+                                <a>Hello, @User.Identity?.Name</a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-success m-1" asp-area="Admin" asp-controller="Drugs" asp-action="FetchOrders">View Orders</a>
+                                <a class="btn btn-success m-1" asp-area="Admin" asp-controller="Orders" asp-action="Index">View Orders</a>
                             </li>
                             <li class="nav-item">
                                 <a class="btn btn-primary m-1" asp-area="Admin" asp-controller="Drugs" asp-action="Index">Manage drugs</a>
                             </li>
                             <li class="nav-item">
                                 <a class="btn btn-danger m-1" asp-controller="Account" asp-action="Logout">Log out</a>
-                            </li>  
+                            </li>
                             @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
                             {
                                 <li class="nav-item">
@@ -49,10 +49,22 @@
                                 </li>
                             }
                         }
-                        else
+                        else if (User.Identity?.IsAuthenticated ?? false)
                         {
+                            <li class="nav-item m-1 pt-1">
+                                <a>Hello, @User.Identity?.Name</a>
+                            </li>
                             <li class="nav-item">
-                                <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Log in</a>
+                                <a class="btn btn-danger m-1" asp-controller="Account" asp-action="Logout">Log out</a>
+                            </li>
+                        }
+                        else
+                        {   
+                            <li class="nav-item">
+                                <a class="btn btn-primary m-1" asp-controller="Account" asp-action="Create">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-primary m-1" asp-controller="Account" asp-action="Login">Log in</a>
                             </li>
                         }
                     </ul>
@@ -70,7 +82,7 @@
                     <vc:categories />
                 </div>
                 <div class="col">
-                    <partial name="_NotificationPartial"/>
+                    <partial name="_NotificationPartial" />
                     @RenderBody()
                 </div>
             </div>

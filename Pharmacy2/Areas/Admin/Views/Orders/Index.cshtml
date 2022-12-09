@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Pharmacy2.Models.Order>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js">
+</script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
+</script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js">
+</script>
+
+<h1>Orders from orderpage</h1>
+
+<p>
+    <a asp-action="Index">View All</a> |
+    <a asp-action="SortCompleted">View Completed</a> |
+    <a asp-action="SortIncomplete">View Incomplete</a>
+</p>
+
+<table class="table table-striped" id="sortTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>CREATED AT</th>
+            <th>ORDER</th>
+            <th>PRICE</th>
+            <th>NAME</th>
+            <th>ADDRESS</th>
+            <th>IS COMPLETED</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Id
+                </td>
+                <td>
+                    @item.createdAt
+                </td>
+                <td>
+                    @item.drugNames
+                </td>
+                <td>
+                    @item.total
+                </td>
+                <td>
+                    @item.FirstName @item.LastName
+                </td>
+                <td>
+                    @item.address
+                </td>
+                @if (!@item.isCompleted.Value)
+                {
+                    <td class="completedIndicator">
+                        Incomplete <a class="button markComp" asp-action="complete" asp-route-id="@item.Id">Mark as complete</a>
+                    </td>
+                }
+                else
+                {
+                    <td class="completedIndicator">
+                        Complete <a class="button markComp" asp-action="complete" asp-route-id="@item.Id">Mark as incomplete</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $('.markComp').click(function () {
+        $(this).parent(".completedIndicator").html(() => 'Complete <a class="button markIncomp"> Mark as incomplete</a> ')
+    });
+</script>
+
+
+<script>
+    $('#sortTable').DataTable();
+</script>

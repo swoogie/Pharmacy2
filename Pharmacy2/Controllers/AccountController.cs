@@ -28,7 +28,7 @@ namespace Pharmacy2.Controllers
 
                 if (result.Succeeded)
                 {
-                    return Redirect("/drugs/admin");
+                    return Redirect("/drugs");
                 }
 
                 foreach (IdentityError error in result.Errors)

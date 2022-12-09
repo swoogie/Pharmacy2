@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Pharmacy2.Infra;
 using Pharmacy2.Models;
 using Pharmacy2.Models.ViewModels;
@@ -17,7 +20,7 @@ namespace Pharmacy2.Controllers
         }
         public IActionResult Index()
         {
-            List<CartItem> cart = HttpContext.Session.GetJson<List<CartItem>>("Cart")?? new List<CartItem>();
+            List<CartItem> cart = HttpContext.Session.GetJson<List<CartItem>>("Cart") ?? new List<CartItem>();
 
             CartViewModel cartVM = new()
             {
@@ -40,7 +43,7 @@ namespace Pharmacy2.Controllers
             {
                 cart.Add(new CartItem(drug));
 
-            } 
+            }
             else
             {
                 cartItem.Quantity += 1;
@@ -101,7 +104,7 @@ namespace Pharmacy2.Controllers
             List<CartItem> cart = HttpContext.Session.GetJson<List<CartItem>>("Cart");
 
             cart.RemoveAll(p => p.DrugId == id);
-                           
+
             if (cart.Count == 0)
             {
                 HttpContext.Session.Remove("Cart");
@@ -111,7 +114,7 @@ namespace Pharmacy2.Controllers
                 HttpContext.Session.SetJson("Cart", cart);
             }
 
-            
+
             TempData["Success"] = "The product has been removed!";
 
             return RedirectToAction("Index");
@@ -124,6 +127,40 @@ namespace Pharmacy2.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public IActionResult Checkoutt()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Checkoutt(Order order)
+        {
+
+            List<CartItem> cart = HttpContext.Session.GetJson<List<CartItem>>("Cart");
+            string drugNames = "";
+
+            foreach (var cartItem in cart)
+            {
+                drugNames += cartItem.DrugName + " x " + cartItem.Quantity + ", ";
+            }
+
+            order.Id = Guid.NewGuid().ToString();
+            order.drugNames = drugNames;
+            order.total = cart.Sum(x => x.Quantity * x.Price);
+            order.isCompleted = false;
+            order.createdAt = DateTime.Now;
+
+            _context.Add(order);
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "Order has been placed!";
+            HttpContext.Session.Remove("Cart");
+            return RedirectToAction("Index");
+
+        }
+
 
         public async Task<IActionResult> Checkout()
         {
@@ -142,7 +179,10 @@ namespace Pharmacy2.Controllers
                 {
                     Id = Guid.NewGuid().ToString(),
                     drugNames = drugNames,
-                    total = cart.Sum(x => x.Quantity * x.Price)
+                    total = cart.Sum(x => x.Quantity * x.Price),
+                    isCompleted = false,
+                    createdAt = DateTime.Now
+
                 };
 
                 _context.Add(order);
