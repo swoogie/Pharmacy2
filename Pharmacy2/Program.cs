@@ -68,5 +68,11 @@ app.MapControllerRoute(
 var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<DataContext>();
 SeedData.SeedDatabase(context);
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    context.Database.Migrate();
+    await SeedUserData.Initialize(services, "pass");
+}
 
 app.Run();

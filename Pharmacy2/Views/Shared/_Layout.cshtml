@@ -28,7 +28,7 @@
 
                     </ul>
                     <ul class="navbar-nav float-end">
-                        @if (User.IsInRole("Admin")) // User.Identity?.IsAuthenticated ?? false
+                        @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item m-1 pt-1">
                                 <a>Hello, @User.Identity?.Name</a>
@@ -42,17 +42,20 @@
                             <li class="nav-item">
                                 <a class="btn btn-danger m-1" asp-controller="Account" asp-action="Logout">Log out</a>
                             </li>
-                            @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+                            @*@if (User.IsInRole("Admin") || User.IsInRole("Editor"))
                             {
                                 <li class="nav-item">
                                     <a class="btn btn-primary m-1" asp-area="Admin" asp-controller="Products" asp-action="Index">Products</a>
                                 </li>
-                            }
+                            }*@
                         }
                         else if (User.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item m-1 pt-1">
                                 <a>Hello, @User.Identity?.Name</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-primary m-1" asp-controller="Account" asp-action="updateuser">My details</a>
                             </li>
                             <li class="nav-item">
                                 <a class="btn btn-danger m-1" asp-controller="Account" asp-action="Logout">Log out</a>

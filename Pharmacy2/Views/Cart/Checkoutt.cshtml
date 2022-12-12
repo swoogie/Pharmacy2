@@ -13,21 +13,21 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
+                <input asp-for="FirstName" class="fname form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
+                <input asp-for="LastName" class="lname form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="address" class="control-label"></label>
-                <input asp-for="address" class="form-control" />
+                <input asp-for="address" class="address form-control" />
                 <span asp-validation-for="address" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Place order" class="btn btn-primary" />
+                <input type="submit" value="Place order" class="btn btn-primary mt-2" />
             </div>
         </form>
     </div>
@@ -36,6 +36,13 @@
 <div>
     <a asp-action="Index">Back to basket</a>
 </div>
+
+@*<script>
+    $('.fname').val(@ViewBag.user.Name);
+    $('.lname').val(@ViewBag.user.LastName);
+    $('.address').val(@ViewBag.user.Address);
+</script>*@
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

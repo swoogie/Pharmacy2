@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,8 @@ using Pharmacy2.Infra;
 using Pharmacy2.Models;
 using Pharmacy2.Models.ViewModels;
 using System.Drawing.Text;
+using System.Dynamic;
+using System.Security.Claims;
 
 namespace Pharmacy2.Controllers
 {
@@ -13,10 +16,11 @@ namespace Pharmacy2.Controllers
     {
 
         private readonly DataContext _context;
-
-        public CartController(DataContext context)
+        private readonly UserManager<AppUser> _userManager;
+        public CartController(DataContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
         public IActionResult Index()
         {
@@ -128,9 +132,28 @@ namespace Pharmacy2.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Checkoutt()
+
+        //public string getUserId()
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+        //    return userId;
+        //}
+
+        
+        public async Task<IActionResult> Checkoutt()
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                Order order = new();
+                var user = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                order.FirstName = user.Name;
+                order.LastName = user.LastName;
+                order.address = user.Address;
+
+                return View(order);
+            }
             return View();
+            
         }
 
 
@@ -138,7 +161,6 @@ namespace Pharmacy2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Checkoutt(Order order)
         {
-
             List<CartItem> cart = HttpContext.Session.GetJson<List<CartItem>>("Cart");
             string drugNames = "";
 
